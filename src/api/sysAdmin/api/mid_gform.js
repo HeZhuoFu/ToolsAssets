@@ -9,10 +9,13 @@ const mid_gform = {
 
     // 分页获取模块数据
     getbypage(page, rows, sort, order, moduleid, formid, formname, progformname) {
-        return axios.get(`${base.sysadminurl}/mid_gform/getbypage?page=` + page
-            + '&rows=' + rows + '&sort=' + sort + '&order=' + order + '&moduleid=' + moduleid + '&formid='
-            + formid + '&formname=' + formname + '&progformname=' + progformname);
-    }
+        return axios.get(`${base.sysadminurl}/mid_gform/getbypage?page=` + page +
+            '&rows=' + rows + '&sort=' + sort + '&order=' + order + '&moduleid=' + moduleid + '&formid=' +
+            formid + '&formname=' + formname + '&progformname=' + progformname);
+    },
+
+    // demo
+
 
 }
 
