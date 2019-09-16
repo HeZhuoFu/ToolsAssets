@@ -6,11 +6,11 @@
 
 <script>
 import jwt_decode from "jwt-decode";
+import "url-search-params-polyfill";
 
 export default {
   name: "app",
-  // 提供reload方法
-  provide: function() {
+  provide() {
     return {
       reload: this.reload
     };
@@ -20,7 +20,11 @@ export default {
       isRouterAlive: true
     };
   },
-  created() {
+  beforeCreate() {
+    // 浏览器刷新后跳转到主页
+    this.$router.push("/home");
+  },
+  mounted() {
     // 刷新后vuex数据不会被清除
     // if (localStorage.eleToken) {
     //   const decode = jwt_decode(localStorage.eleToken);

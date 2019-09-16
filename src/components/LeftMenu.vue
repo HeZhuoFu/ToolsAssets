@@ -1,30 +1,23 @@
 <template>
-  <div>
-    <el-row class="menu_page">
-      <el-col>
-        <el-menu
-          class="el-menu-vertical-demo"
-          background-color="#324057"
-          text-color="#fff"
-          unique-opened
-          active-text-color="#409eff"
-        >
-          <router-link to="/home">
-            <el-menu-item index="99">
-              <i class="fa fa-margin fa-servr el-icon-menu"></i>
-              <span slot="title">工作台账</span>
-            </el-menu-item>
-          </router-link>
-
-          <template v-for="item in items">
-            <el-submenu v-if="item.children" :index="'' + item.seq">
+  <div class="sidebar">
+    <el-menu
+      class="sidebar-el-menu"
+      :default-active="onRoutes"
+      :collapse="collapse"
+      text-color="black"
+      active-text-color="#20a0ff"
+      unique-opened
+      router
+    >
+      <template v-for="item in items">
+            <el-submenu v-if="item.children" :key="item.menuid" :index="'' + item.seq">
               <template slot="title">
-                <i :class=" 'fa fa-margin ' + item.iconclass "></i>
+                <i :class="item.iconclass "></i>
                 <span slot="title">{{item.menuname}}</span>
               </template>
               <router-link
                 v-for="(citem,cindex) in item.children"
-                :to=" '/' + citem.moduleid + '/' + citem.formid"
+                :to="{ name: citem.formid, params: { formid: citem.formid}}"
                 :key="cindex"
               >
                 <el-menu-item :index="''+citem.seq">
@@ -33,68 +26,76 @@
               </router-link>
             </el-submenu>
           </template>
-        </el-menu>
-      </el-col>
-    </el-row>
+    </el-menu>
   </div>
 </template>
 
 <script>
 import bus from "../assets/EventBus.js";
 export default {
-  name: "left-menu",
   data() {
     return {
-      items: []
+      collapse: false,
+      items: [],
     };
   },
+  computed: {
+    onRoutes() {
+      return this.$route.path.replace("/", "");
+    }
+  },
   created() {
+    // 通过 Event Bus 进行组件间通信，来折叠侧边栏
+    bus.$on("collapse", msg => {
+      this.collapse = msg;
+    });
+
     bus.$on("tip", index => {
       this.getleftdatas(index);
     });
   },
-  methods: {
+  methods:{
     // 获取左侧数据
     getleftdatas(moduleid) {
       var alldatas = JSON.parse(localStorage.eleMenu || "[]");
       // console.log(localStorage.eleRouter);
-       this.items = alldatas.filter(x => x.moduleid === moduleid);
+      this.items = alldatas.filter(x => x.moduleid === moduleid);
     }
   }
 };
 </script>
 
 <style scoped>
-.menu_page {
-  position: fixed;
-  top: 71px;
+.sidebar {
+  display: block;
+  position: absolute;
   left: 0;
-  min-height: 100%;
-  background-color: #324057;
-  z-index: 99;
+  top: 60px;
+  bottom: 0;
+  overflow-y: scroll;
 }
-.el-menu {
-  border: none;
+.sidebar::-webkit-scrollbar {
+  width: 0;
 }
-.fa-margin {
-  margin-right: 10px;
-}
-.el-menu-vertical-demo:not(.el-menu--collapse) {
+.sidebar-el-menu:not(.el-menu--collapse) {
   width: 180px;
-  min-height: 400px;
 }
-.el-menu-vertical-demo {
-  width: 35px;
-}
-.el-submenu .el-menu-item {
-  min-width: 180px;
-}
-
-.hiddenDropdown,
-.hiddenDropname {
-  display: none;
+.sidebar > ul {
+  height: 100%;
 }
 a {
   text-decoration: none;
+}
+/* menu下划线？ */
+.el-menu .el-submenu {
+  border: none;
+  border-bottom: solid 1px #e4e7ed;
+}
+.el-submenu__title {
+  font-size: 12px;
+}
+
+.el-menu .el-menu-item {
+  font-size: 12px;
 }
 </style>

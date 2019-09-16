@@ -1,21 +1,23 @@
+<!-- 头部组件 -->
 <template>
-  <header class="head-nav">
+  <header class="head-nav" >
     <el-row>
-      <el-col :span="6" class="logo-container">
-        <img src="../assets/logo.png" class="logo" alt>
-        <span class="title">模具生产管理系统</span>
+      <el-col :span="3" class="logo-container">
+        <img src="../assets/logo.png" class="logo" @click="hide" alt />
+        <span class="title">模具生产制造系统</span>
       </el-col>
-      <el-col :span="12">
+      <el-col :span="15">
         <el-menu
           default-active="0"
           mode="horizontal"
-          background-color="#324057"
+          background-color="#647ed9"
           text-color="#fff"
           active-text-color="#ffd04b"
         >
           <template v-for="item in items">
             <el-menu-item
               :index="''+item.seqn"
+              :key="item.moduleid"
               @click="handleSelect(item.moduleid)"
             >{{item.modulename}}</el-menu-item>
           </template>
@@ -23,7 +25,15 @@
       </el-col>
       <el-col :span="6" class="user">
         <div class="userinfo">
-          <img src="../assets/touxiang.jpg" class="avatar" alt>
+          <el-input
+            style="width:120px;padding-right:20px;"
+            @keyup.enter.native="go"
+            size="mini"
+            v-model="searchformid"
+            placeholder="请输入功能号"
+          ></el-input>
+          <el-button icon="el-icon-refresh" size="mini" circle style="margin-right:20px;"></el-button>
+          <img src="../assets/touxiang.jpg" class="avatar" alt />
           <div class="welcome">
             <p class="name comename">欢迎</p>
             <p class="name avatarname">{{user.username}}</p>
@@ -59,7 +69,9 @@ export default {
 
   data() {
     return {
-      items: []
+      items: [],
+      searchformid: "",
+      collapse: false,
     };
   },
 
@@ -68,12 +80,38 @@ export default {
   },
 
   mounted() {
-    bus.$emit("tip", "Base");
+    // bus.$emit("tip", "Base");
   },
 
   methods: {
+    // logo点击事件
+    hide() {
+      this.collapse = !this.collapse;
+      bus.$emit("collapse", this.collapse);
+    },
+
+    go() {
+      if (this.searchformid == "") {
+        this.$message.warning("请输入功能号!");
+        return;
+      }
+
+      var r = JSON.parse(localStorage.eleRouter || "[]");
+
+      var url = r.filter(x => x.formid === Number(this.searchformid));
+
+      this.$router.push({
+        name: "" + Number(url[0].formid) + "",
+        params: { formid: Number(url[0].formid) }
+      });
+    },
     getModule() {
+      setTimeout(this.pause, 1000);
+    },
+
+    pause() {
       this.items = JSON.parse(localStorage.eleModule || "[]");
+      bus.$emit("tip", "Base");
     },
 
     handleSelect(index) {
@@ -101,7 +139,8 @@ export default {
       localStorage.removeItem("eleModule");
       localStorage.removeItem("eleMenu");
       localStorage.removeItem("eleUser");
-
+      localStorage.removeItem("eleRouter");
+      localStorage.removeItem("eleAction");
       // 跳转
       this.$router.push("/login");
     }
@@ -110,38 +149,41 @@ export default {
 </script>
 
 <style scoped>
-.el-menu-demo {
-  background: #324057;
-}
+/* 重写导航下划线 */
 .el-menu.el-menu--horizontal {
-  border-bottom: solid 1px #324057;
+  border-bottom: solid 1px #409eff;
 }
+
+/* header样式 */
 .head-nav {
   width: 100%;
-  height: 60px;
+  /* height: 60px; */
   min-width: 600px;
-  padding: 5px;
-  background: #324057;
+  background: #647ed9;
   color: #fff;
-  border-bottom: 1px solid #1f2d3d;
 }
-.logo-container {
-  line-height: 60px;
-  min-width: 400px;
-}
-.logo {
-  height: 50px;
-  width: 50px;
-  margin-right: 5px;
-  vertical-align: middle;
-  display: inline-block;
-}
+
+/* 网站标题 */
 .title {
   vertical-align: middle;
-  font-size: 22px;
+  font-size: 20px;
   font-family: "Microsoft YaHei";
   letter-spacing: 3px;
 }
+
+.logo-container {
+  line-height: 60px;
+}
+
+/* logo图标 */
+.logo {
+  height: 30;
+  width: 30px;
+  margin-right: 10px;
+  vertical-align: middle;
+  display: inline-block;
+}
+
 .user {
   line-height: 60px;
   text-align: right;
@@ -170,7 +212,6 @@ export default {
   font-size: 12px;
 }
 .avatarname {
-  color: #409eff;
   font-weight: bolder;
 }
 .username {
