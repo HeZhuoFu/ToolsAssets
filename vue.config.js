@@ -1,4 +1,5 @@
 const path = require('path');
+
 function resolve(dir) {
     return path.join(__dirname, dir)
 }
@@ -13,5 +14,6 @@ module.exports = {
             .set('@routes', resolve('src/routes'))
             .set('@views', resolve('src/views'))
             .set('@api', resolve('src/api'))
+            .set('@utils', resolve('src/utils'))
     }
 }
