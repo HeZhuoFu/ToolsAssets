@@ -11,6 +11,9 @@ import api from "@utils/api";
 
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/index.css'
+import XEUtils from 'xe-utils'
+
+
 
 Vue.use(VXETable)
 
