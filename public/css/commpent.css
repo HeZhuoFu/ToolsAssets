@@ -1,0 +1,60 @@
+/* 组件主体样式 */
+
+
+/* .container {
+  padding: 10px 10px 0px 10px;
+  height:98%;
+  background-color: #f5f7fb;
+} */
+
+.container2 {
+    margin: 10px 10px 0px 10px;
+    background-color: #f4fbe8
+}
+
+
+/* 工具栏样式 */
+
+.self-margin-down {
+    text-align: left;
+    padding: 10px;
+}
+
+
+/* 条件筛选lable样式 */
+
+search-more-label {
+    padding-top: 6px;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.content-box {
+    position: absolute;
+    left: 180px;
+    right: 0;
+    top: 60px;
+    bottom: 0;
+    padding-bottom: 30px;
+    -webkit-transition: left .3s ease-in-out;
+    transition: left .3s ease-in-out;
+    background: #f0f0f0;
+}
+
+.content-collapse {
+    left: 65px;
+}
+
+.content {
+    width: auto;
+    height: 100%;
+    /* overflow-y: scroll; */
+    box-sizing: border-box;
+}
